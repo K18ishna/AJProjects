@@ -87,15 +87,15 @@
       <div class="container">
           <div class="tm-floating-contact-form">
       <h2 class="tm-text-primary mb-4">Contact Form</h2>
-      <form action="#" method="post" class="contact-form">
+      <form id="contactForm" onsubmit="sendToWhatsApp(event)" class="contact-form">
           <div class="form-group">
-              <input type="text" name="name" class="form-control" placeholder="Name" required />
+              <input type="text" name="name" id="name" class="form-control" placeholder="Name" required />
           </div>
           <div class="form-group">
-              <input type="tel" name="phone" class="form-control" placeholder="Phone Number" required />
+              <input type="tel" name="phone" id="phone" class="form-control" placeholder="Phone Number" required />
           </div>
           <div class="form-group">
-              <input type="email" name="email" class="form-control" placeholder="Email" required />
+              <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
           </div>
           <button type="submit" class="btn tm-btn-submit">Submit</button>
       </form>
@@ -606,6 +606,38 @@
         ]
         });
       });
+  function sendToWhatsApp(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const email = document.getElementById("email").value;
+
+    // Create data object
+    const data = {
+        name: name,
+        phone: phone,
+        email: email
+    };
+
+    // Send as JSON instead of FormData
+    fetch("https://script.google.com/macros/s/AKfycbywNOuAwBv6NbW7EodlnAezNUXv-0PXBik_yNjRya1ZDnoIXGRl10hU57iVGitGxY-Qzg/exec", {
+        method: "POST",
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(() => {
+        alert("Form submitted successfully!");
+        document.getElementById("contactForm").reset();
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("There was an error submitting the form.");
+    });
+}
     </script>
   </body>
 </html>
